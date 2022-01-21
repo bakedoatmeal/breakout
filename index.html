@@ -68,9 +68,18 @@
                 x += dx;
                 y += dy;
             
-                if(y + dy < ballRadius|| y + dy > canvas.height - ballRadius) {
+                if(y + dy < ballRadius) {
                     dy = -dy;
+                } else if(y + dy > canvas.height-ballRadius){
+                    if(x> paddleX && x < paddleX + paddleWidth) {
+                        dy = -dy;
+                    } else {
+                        alert('GAME OVER');
+                        document.location.reload();
+                        clearInterval(interval);
+                    }
                 }
+
                 if(x + dx > canvas.width - ballRadius|| x + dx < ballRadius) {
                     dx = -dx;
                 }
@@ -87,7 +96,9 @@
                     }
                 }
             }
-            setInterval(draw, 10);
+            
+            //setInterval(draw, 10);
+            let interval = setInterval(draw, 10);
 
             let fillBackground = () => {
                 //can run this instead of clearRect to get a disappearing effect 
