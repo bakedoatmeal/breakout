@@ -33,8 +33,7 @@
             let brickOffsetTop = 30;
             let brickOffsetLeft = 30;
             let score = 0;
-
-
+            let lives = 3;
 
             let bricks = [];
             for (let c = 0; c < brickColumnCount; c++) {
@@ -78,6 +77,12 @@
                 ctx.closePath();
             }
 
+            const drawLives = () => {
+                ctx.font = '16px Arial';
+                ctx.fillStyle = '#0095DD';
+                ctx.fillText('Lives: ' + lives, canvas.width-65, 20);
+            }
+
             const keyDownHandler = (e) => {
                 if (e.key == 'Right' || e.key == 'ArrowRight') {
                     rightPressed = true;
@@ -117,7 +122,6 @@
                             if (score == brickRowCount*brickColumnCount) {
                                 alert("You win, congratulations!");
                                 document.location.reload();
-                                clearInterval(interval);
                             }
                             }
                         }
@@ -138,6 +142,7 @@
                 drawScore();
                 collisionDetection();
                 drawBricks();
+                drawLives();
                 x += dx;
                 y += dy;
             
@@ -147,9 +152,17 @@
                     if(x> paddleX && x < paddleX + paddleWidth) {
                         dy = -dy;
                     } else {
-                        alert('GAME OVER');
-                        document.location.reload();
-                        clearInterval(interval);
+                        lives--;
+                        if (!lives) {
+                            alert('Game Over');
+                            document.location.reload();
+                        } else {
+                            x = canvas.width/2;
+                            y = canvas.height-30;
+                            dx = 2;
+                            dy =-2;
+                            paddleX = (canvas.width-paddleWidth)/2;
+                        }
                     }
                 }
 
@@ -168,10 +181,10 @@
                         paddleX = 0;
                     }
                 }
+                requestAnimationFrame(draw);
             }
             
-            //setInterval(draw, 10);
-            let interval = setInterval(draw, 10);
+            draw();
 
             let fillBackground = () => {
                 //can run this instead of clearRect to get a disappearing effect 
