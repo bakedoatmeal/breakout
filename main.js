@@ -1,4 +1,5 @@
 const canvas = document.getElementById('myCanvas');
+const button = document.getElementById('restart-btn');
 const ctx = canvas.getContext('2d');
 let x = canvas.width / 2;
 let y = canvas.height - 30;
@@ -20,6 +21,7 @@ const brickOffsetLeft = 25;
 let score = 0;
 let lives = 3;
 const colors = ['b5179e', '560bad', '480ca8', '3f37c9', '4895ef', '4cc9f0'];
+let keepPlaying = true;
 
 const bricks = [];
 for (let c = 0; c < brickColumnCount; c += 1) {
@@ -28,6 +30,13 @@ for (let c = 0; c < brickColumnCount; c += 1) {
     bricks[c][r] = { x: 0, y: 0, status: 1 };
   }
 }
+
+const displayMessage = (message) => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.font = '16px Arial';
+  ctx.fillStyle = '#0095DD';
+  ctx.fillText(message, canvas.width / 2, canvas.height / 2);
+};
 
 const drawBricks = () => {
   for (let c = 0; c < brickColumnCount; c += 1) {
@@ -95,6 +104,10 @@ const mouseMoveHandler = (e) => {
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
 document.addEventListener('mousemove', mouseMoveHandler, false);
+button.onclick = () => {
+  keepPlaying = true;
+  document.location.reload();
+};
 
 const collisionDetection = () => {
   for (let c = 0; c < brickColumnCount; c += 1) {
@@ -106,8 +119,9 @@ const collisionDetection = () => {
           b.status = 0;
           score += 1;
           if (score === brickRowCount * brickColumnCount) {
-            alert('You win, congratulations!');
-            document.location.reload();
+            displayMessage('You win, congratulations!');
+            keepPlaying = false;
+            // document.location.reload();
           }
         }
       }
@@ -140,8 +154,9 @@ const draw = () => {
     } else {
       lives -= 1;
       if (!lives) {
-        alert('Game Over');
-        document.location.reload();
+        displayMessage('Game Over');
+        keepPlaying = false;
+        // document.location.reload();
       } else {
         x = canvas.width / 2;
         y = canvas.height - 30;
@@ -167,7 +182,9 @@ const draw = () => {
       paddleX = 0;
     }
   }
-  requestAnimationFrame(draw);
+  if (keepPlaying) {
+    requestAnimationFrame(draw);
+  }
 };
 
 draw();
