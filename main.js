@@ -10,15 +10,16 @@ const paddleWidth = 75;
 let paddleX = (canvas.width - paddleWidth) / 2;
 let rightPressed = false;
 let leftPressed = false;
-const brickRowCount = 3;
-const brickColumnCount = 5;
-const brickWidth = 75;
-const brickHeight = 20;
+const brickRowCount = 4;
+const brickColumnCount = 6;
+const brickWidth = 65;
+const brickHeight = 18;
 const brickPadding = 10;
 const brickOffsetTop = 30;
-const brickOffsetLeft = 30;
+const brickOffsetLeft = 25;
 let score = 0;
 let lives = 3;
+const colors = ['b5179e', '560bad', '480ca8', '3f37c9', '4895ef', '4cc9f0'];
 
 const bricks = [];
 for (let c = 0; c < brickColumnCount; c += 1) {
@@ -38,7 +39,7 @@ const drawBricks = () => {
         bricks[c][r].y = brickY;
         ctx.beginPath();
         ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        ctx.fillStyle = '#0095DD';
+        ctx.fillStyle = `#${colors[c]}`;
         ctx.fill();
         ctx.closePath();
       }
@@ -49,7 +50,7 @@ const drawBricks = () => {
 const drawBall = () => {
   ctx.beginPath();
   ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-  ctx.fillStyle = '#0095DD';
+  ctx.fillStyle = '#f72585';
   ctx.fill();
   ctx.closePath();
 };
@@ -57,7 +58,7 @@ const drawBall = () => {
 const drawPaddle = () => {
   ctx.beginPath();
   ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-  ctx.fillStyle = '#0095DD';
+  ctx.fillStyle = '#b5179e';
   ctx.fill();
   ctx.closePath();
 };
