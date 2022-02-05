@@ -2,21 +2,22 @@ import Brick from './Brick.js';
 import Ball from './Ball.js';
 import Paddle from './Paddle.js';
 import Text from './Text.js';
+import Bricks from './Bricks.js';
 
 const canvas = document.getElementById('myCanvas');
 const button = document.getElementById('restart-btn');
 const ctx = canvas.getContext('2d');
 const ball = new Ball(200, 200, 10);
 const paddle = new Paddle(0, canvas.height - 10, 75, 10);
-
+const bricks = new Bricks();
 // const brick = new Brick(200, 200);
 
 ball.x = canvas.width / 2;
 ball.y = canvas.height - 30;
 ball.dx = 1.5 + Math.random();
 ball.dy = -1.5 + Math.random();
-const brickRowCount = 4;
-const brickColumnCount = 6;
+const brickRowCount = 3;
+const brickColumnCount = 5;
 paddle.x = (canvas.width - 75) / 2;
 let rightPressed = false;
 let leftPressed = false;
@@ -24,32 +25,9 @@ let score = 0;
 let lives = 3;
 const colors = ['b5179e', '560bad', '480ca8', '3f37c9', '4895ef', '4cc9f0'];
 let keepPlaying = true;
-const bricks = [];
 const livesDisplay = new Text(canvas.width - 65, 20, '#0095DD', '16px Arial', `Lives: ${lives}`);
 const scoreDisplay = new Text(8, 20, '#0095DD', '16px Arial', `Score: ${lives}`);
 const textDisplay = new Text(canvas.width / 2, canvas.height / 2, '#0095DD', '16px Arial');
-
-for (let c = 0; c < 10; c += 1) {
-  bricks[c] = [];
-  for (let r = 0; r < 4; r += 1) {
-    bricks[c][r] = new Brick(0, 0);
-  }
-}
-
-const drawBricks = (columnCount, rowCount, brickPadding, brickOffsetLeft, brickOffsetTop) => {
-  for (let c = 0; c < columnCount; c += 1) {
-    for (let r = 0; r < rowCount; r += 1) {
-      if (bricks[c][r].status === 1) {
-        const brickX = (c * (bricks[c][r].width + brickPadding)) + brickOffsetLeft;
-        const brickY = (r * (bricks[c][r].height + brickPadding)) + brickOffsetTop;
-        bricks[c][r].x = brickX;
-        bricks[c][r].y = brickY;
-        // console.log(bricks[c][r].x, bricks[c][r].y);
-        bricks[c][r].render(ctx);
-      }
-    }
-  }
-};
 
 const keyDownHandler = (e) => {
   if (e.key === 'Right' || e.key === 'ArrowRight') {
@@ -85,7 +63,7 @@ button.onclick = () => {
 const collisionDetection = () => {
   for (let c = 0; c < brickColumnCount; c += 1) {
     for (let r = 0; r < brickRowCount; r += 1) {
-      const b = bricks[c][r];
+      const b = bricks.bricks[c][r];
       if (b.status === 1) {
         if (ball.x > b.x && ball.x < b.x + b.width && ball.y > b.y) {
           if (ball.y < b.y + b.height) {
@@ -112,13 +90,14 @@ const draw = () => {
   scoreDisplay.render(ctx, `Score: ${score}`);
   livesDisplay.render(ctx, `Lives: ${lives}`);
   collisionDetection();
-  drawBricks(6, 4, 10, 30, 25);
+  bricks.render(ctx);
+  // drawBricks(6, 4, 10, 30, 25);
 
   ball.x += ball.dx;
   ball.y += ball.dy;
 
   if (ball.y + ball.dy < ball.radius) {
-    ball.y += ball.dy;
+    ball.dy = -ball.dy;
   } else if (ball.y + ball.dy > canvas.height - ball.radius) {
     if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
       ball.dy = -ball.dy;
