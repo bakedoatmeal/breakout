@@ -3,6 +3,7 @@ import Ball from './Ball.js';
 import Paddle from './Paddle.js';
 import Text from './Text.js';
 import Bricks from './Bricks.js';
+import Background from './Background.js'
 
 const canvas = document.getElementById('myCanvas');
 const button = document.getElementById('restart-btn');
@@ -10,6 +11,7 @@ const ctx = canvas.getContext('2d');
 const ball = new Ball(200, 200, 10);
 const paddle = new Paddle(0, canvas.height - 10, 75, 10);
 const bricks = new Bricks();
+const background = new Background(canvas.width, canvas.height, 'honeydew');
 // const brick = new Brick(200, 200);
 
 ball.x = canvas.width / 2;
@@ -85,6 +87,7 @@ const collisionDetection = () => {
 
 const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  background.render(ctx);
   ball.render(ctx);
   paddle.render(ctx);
   scoreDisplay.render(ctx, `Score: ${score}`);

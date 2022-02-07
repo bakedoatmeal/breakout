@@ -4,6 +4,7 @@ class Bricks {
   constructor(rows = 3, cols = 5) {
     this.rows = rows;
     this.cols = cols;
+    this.totalBricks = rows * cols;
     this.bricks = [];
     this.setup();
   }
